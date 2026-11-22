@@ -140,13 +140,13 @@ export function DocumentViewer({
           <div className="flex items-center gap-1.5 text-[#64748B] min-w-0">
             <ShieldCheck className="w-3.5 h-3.5 text-[#16A34A] flex-shrink-0" strokeWidth={2} />
             <span className="font-semibold text-[#1E293B] hidden sm:inline">SHA-256:</span>
-            <span className="font-mono text-[10px] truncate text-[#475569] max-w-[180px] sm:max-w-none">
+            <span className="font-mono text-[10px] truncate text-[#475569] max-w-[130px] xs:max-w-[180px] sm:max-w-none">
               {sha256Hash}
             </span>
           </div>
           <button
             onClick={copyHash}
-            className="px-2 py-0.5 rounded-sm bg-white border border-[#CBD5E1] text-[#475569] hover:text-[#17365D] font-medium transition-colors flex-shrink-0"
+            className="px-2.5 py-1 sm:py-0.5 rounded-sm bg-white border border-[#CBD5E1] text-[#475569] hover:text-[#17365D] font-medium transition-colors flex-shrink-0 touch-manipulation text-xs sm:text-[11px]"
           >
             {copiedHash ? (
               <span className="text-[#16A34A] flex items-center gap-1">

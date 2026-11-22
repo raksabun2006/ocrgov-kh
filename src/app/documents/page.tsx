@@ -148,9 +148,9 @@ export default function DocumentsArchivePage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="ស្វែងរកតាមឈ្មោះឯកសារ..."
-                className="w-full pl-9 pr-3 py-2 text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-lg text-[#1E293B] focus:ring-2 focus:ring-[#17365D] font-khmer"
+                className="w-full pl-9 pr-3 py-2.5 sm:py-2 text-base sm:text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-lg text-[#1E293B] focus:ring-2 focus:ring-[#2457A7] font-khmer"
               />
-              <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-2.5" />
+              <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-3.5 sm:top-2.5 pointer-events-none" />
             </div>
 
             {/* Document Type Dropdown */}
@@ -161,7 +161,7 @@ export default function DocumentsArchivePage() {
                   setSelectedType(e.target.value);
                   setPage(1);
                 }}
-                className="w-full px-3 py-2 text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-lg text-[#1E293B] focus:ring-2 focus:ring-[#17365D] font-khmer"
+                className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-lg text-[#1E293B] focus:ring-2 focus:ring-[#2457A7] font-khmer"
               >
                 <option value="">គ្រប់ប្រភេទឯកសារ (All Types)</option>
                 {documentTypes.map((type) => (
@@ -180,7 +180,7 @@ export default function DocumentsArchivePage() {
                   setSelectedStatus(e.target.value);
                   setPage(1);
                 }}
-                className="w-full px-3 py-2 text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-lg text-[#1E293B] focus:ring-2 focus:ring-[#17365D] font-khmer"
+                className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-lg text-[#1E293B] focus:ring-2 focus:ring-[#2457A7] font-khmer"
               >
                 <option value="">គ្រប់ស្ថានភាព (All Statuses)</option>
                 <option value="PROCESSED">PROCESSED (ជោគជ័យ)</option>

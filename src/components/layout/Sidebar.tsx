@@ -99,7 +99,7 @@ function NavLinks({
             key={item.href}
             href={targetHref}
             onClick={onMobileClose}
-            className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+            className={`group flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
               item.active
                 ? 'bg-[#EFF4FC] text-[#2457A7] font-semibold border-l-4 border-[#2457A7] pl-2.5 shadow-xs'
                 : 'text-[#5E6C84] hover:bg-[#F5F7FA] hover:text-[#172B4D]'
@@ -139,8 +139,8 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
       )}
 
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white border-r border-[#E5EAF0] shadow-sm lg:shadow-none transition-all duration-200 ease-in-out ${
-          collapsed ? 'w-20' : 'w-68'
+        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white border-r border-[#E5EAF0] shadow-sm lg:shadow-none transition-all duration-200 ease-in-out h-[100dvh] ${
+          collapsed ? 'w-20' : 'w-72 max-w-[85vw] sm:w-68'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Government Identity Header without unnecessary logos */}

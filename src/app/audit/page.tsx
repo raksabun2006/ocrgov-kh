@@ -71,20 +71,20 @@ export default function AuditTrailPage() {
         </div>
 
         {/* Filter Bar */}
-        <div className="bg-white border border-[#E5EAF0] rounded-xl p-3.5 sm:p-4 shadow-xs flex flex-wrap items-center gap-2.5 sm:gap-3">
+        <div className="bg-white border border-[#E5EAF0] rounded-xl p-3.5 sm:p-4 shadow-xs flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3">
           <input
             type="text"
             value={filterAction}
             onChange={(e) => setFilterAction(e.target.value)}
             placeholder="ចម្រាញ់តាមសកម្មភាព (e.g. UPLOAD, VERIFY)..."
-            className="px-3 py-2 text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] font-mono min-w-[220px]"
+            className="px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] font-mono w-full sm:w-auto sm:min-w-[220px] focus:outline-hidden focus:ring-1 focus:ring-[#2457A7]"
           />
           <input
             type="text"
             value={filterUser}
             onChange={(e) => setFilterUser(e.target.value)}
             placeholder="ឈ្មោះមន្ត្រី (User ID)..."
-            className="px-3 py-2 text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] font-khmer min-w-[180px]"
+            className="px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] font-khmer w-full sm:w-auto sm:min-w-[180px] focus:outline-hidden focus:ring-1 focus:ring-[#2457A7]"
           />
         </div>
 

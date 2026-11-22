@@ -1,6 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { RemoveDevIndicator } from "../components/ui/RemoveDevIndicator";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "ប្រព័ន្ធឌីជីថលសម្រាប់សម្គាល់អត្ថបទក្នុងឯកសារ | Government Document Intelligence System",
@@ -33,7 +40,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full flex flex-col font-sans bg-[#F5F7FA] text-[#172B4D]">
+      <body className="min-h-full flex flex-col font-sans bg-[#F5F7FA] text-[#172B4D] antialiased overflow-x-hidden">
         <RemoveDevIndicator />
         {children}
       </body>

@@ -127,7 +127,7 @@ export function ClassificationBadgeAndModal({
                 <select
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value as DocumentTypeEnum)}
-                  className="w-full px-3 py-2 text-xs bg-white border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
+                  className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-white border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
                 >
                   {availableTypes.map((type) => (
                     <option key={type} value={type}>
@@ -145,7 +145,7 @@ export function ClassificationBadgeAndModal({
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 text-xs bg-white border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
+                  className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-white border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
                   placeholder="បញ្ជាក់ពីមូលហេតុនៃការកែប្រែប្រភេទឯកសារ..."
                 />
               </div>

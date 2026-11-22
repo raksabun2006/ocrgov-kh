@@ -253,7 +253,7 @@ export default function ReceiptsScanPage() {
                 <textarea
                   readOnly
                   value={result.extracted_text}
-                  className="w-full h-[280px] sm:h-[450px] p-3 sm:p-4 text-xs sm:text-sm font-khmer leading-relaxed bg-white border-0 resize-none focus:outline-hidden"
+                  className="w-full h-[280px] sm:h-[450px] p-3 sm:p-4 text-base sm:text-sm font-khmer leading-relaxed bg-white border-0 resize-none focus:outline-hidden"
                 />
               </div>
             </div>

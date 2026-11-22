@@ -151,7 +151,7 @@ export function LanguageFlagSwitcher() {
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-center p-0 bg-transparent border-0 shadow-none hover:opacity-90 hover:scale-105 active:scale-95 transition-all focus:outline-hidden cursor-pointer"
+        className="flex items-center justify-center p-1 sm:p-0 bg-transparent border-0 shadow-none hover:opacity-90 hover:scale-105 active:scale-95 transition-all focus:outline-hidden cursor-pointer touch-manipulation"
         title={language === 'km' ? 'ភាសាខ្មែរ (ចុច ឬដាក់កណ្ដុរដើម្បីប្ដូរ)' : 'English (Click or hover to switch)'}
         aria-label="Switch Language"
         aria-expanded={isOpen}
@@ -175,7 +175,7 @@ export function LanguageFlagSwitcher() {
             <button
               type="button"
               onClick={() => handleSelect('km')}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 sm:py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer touch-manipulation ${
                 language === 'km'
                   ? 'bg-[#E3FCEF] text-[#00875A]'
                   : 'text-[#172B4D] hover:bg-[#F5F7FA]'
@@ -196,7 +196,7 @@ export function LanguageFlagSwitcher() {
             <button
               type="button"
               onClick={() => handleSelect('en')}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 sm:py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer touch-manipulation ${
                 language === 'en'
                   ? 'bg-[#E3FCEF] text-[#00875A]'
                   : 'text-[#172B4D] hover:bg-[#F5F7FA]'

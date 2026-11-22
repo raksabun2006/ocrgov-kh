@@ -111,7 +111,7 @@ export default function VerificationQueuePage() {
               <select
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
-                className="text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-md px-2.5 py-1 text-[#172B4D] font-khmer"
+                className="text-base sm:text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-md px-2.5 py-1.5 sm:py-1 text-[#172B4D] font-khmer focus:outline-hidden"
               >
                 <option value="">គ្រប់ប្រភេទឯកសារ (All Types)</option>
                 <option value="BIRTH_CERTIFICATE">សំបុត្រកំណើត (Birth Certificate)</option>

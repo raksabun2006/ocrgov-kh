@@ -82,7 +82,7 @@ export default function SettingsPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full max-w-md px-3 py-2 text-xs bg-white border border-[#D0E0F7] rounded-lg font-khmer focus:ring-2 focus:ring-[#2457A7]"
+                className="w-full max-w-md px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-white border border-[#D0E0F7] rounded-lg font-khmer focus:ring-2 focus:ring-[#2457A7]"
                 placeholder="officer"
               />
             </div>

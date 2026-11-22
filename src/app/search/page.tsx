@@ -90,7 +90,7 @@ export default function AdvancedSearchPage() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="បញ្ចូលពាក្យគន្លឹះ..."
-                  className="w-full px-3 py-2 text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
+                  className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
                 />
               </div>
 
@@ -103,7 +103,7 @@ export default function AdvancedSearchPage() {
                   value={regNumber}
                   onChange={(e) => setRegNumber(e.target.value)}
                   placeholder="ឧទាហរណ៍៖ 123/2026..."
-                  className="w-full px-3 py-2 text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-mono"
+                  className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-mono"
                 />
               </div>
 
@@ -114,7 +114,7 @@ export default function AdvancedSearchPage() {
                 <select
                   value={docType}
                   onChange={(e) => setDocType(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
+                  className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
                 >
                   <option value="">គ្រប់ប្រភេទ (All)</option>
                   {documentTypes.map((type) => (
@@ -132,7 +132,7 @@ export default function AdvancedSearchPage() {
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
+                  className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-lg text-[#172B4D] focus:ring-2 focus:ring-[#2457A7] font-khmer"
                 >
                   <option value="">គ្រប់ស្ថានភាព (All)</option>
                   <option value="PROCESSED">PROCESSED (ជោគជ័យ)</option>

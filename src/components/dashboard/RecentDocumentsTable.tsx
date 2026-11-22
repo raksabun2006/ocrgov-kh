@@ -46,21 +46,21 @@ export function RecentDocumentsTable({
           </h3>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <div className="relative">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
+          <div className="relative flex-1 sm:flex-initial">
             <input
               type="text"
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
               placeholder="ស្វែងរកក្នុងតារាង..."
-              className="text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-md pl-7 pr-2.5 py-1 text-[#172B4D] font-khmer w-36 sm:w-48"
+              className="w-full sm:w-48 text-base sm:text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-md pl-7 pr-2.5 py-1.5 sm:py-1 text-[#172B4D] font-khmer focus:outline-hidden focus:ring-1 focus:ring-[#2457A7]"
             />
-            <Search className="w-3.5 h-3.5 text-[#5E6C84] absolute left-2 top-2" />
+            <Search className="w-3.5 h-3.5 text-[#5E6C84] absolute left-2 top-2.5 sm:top-2 pointer-events-none" />
           </div>
 
           <Link
             href="/documents"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-[#2457A7] hover:underline font-khmer whitespace-nowrap"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-[#2457A7] hover:underline font-khmer whitespace-nowrap flex-shrink-0"
           >
             <span>{t.viewAll}</span>
             <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />

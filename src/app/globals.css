@@ -25,12 +25,37 @@
   --font-khmer: 'Noto Sans Khmer', 'Battambang', 'Khmer OS Battambang', 'Khmer OS', system-ui, sans-serif;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   background-color: var(--page-bg);
   color: var(--text-main);
   font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent auto-zoom on input focus on iOS / mobile Safari, Chrome, and Android */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="number"],
+  input[type="search"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="url"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Smooth touch scrolling on mobile iOS / Android */
+.overflow-y-auto,
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Khmer Typography with Noto Sans Khmer priority */

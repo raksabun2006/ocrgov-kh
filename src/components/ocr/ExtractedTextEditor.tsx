@@ -220,7 +220,7 @@ export function ExtractedTextEditor({
           value={currentText}
           onChange={handleTextChange}
           placeholder="លទ្ធផលអត្ថបទដែលបានសម្គាល់នឹងបង្ហាញនៅទីនេះ..."
-          className="flex-1 w-full p-3 sm:p-5 text-sm sm:text-base leading-relaxed text-[#172B4D] bg-white resize-none focus:outline-hidden font-khmer ocr-text-display border-0"
+          className="flex-1 w-full p-3 sm:p-5 text-base leading-relaxed text-[#172B4D] bg-white resize-none focus:outline-hidden font-khmer ocr-text-display border-0"
           spellCheck={false}
         />
       </div>
