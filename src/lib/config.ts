@@ -1,5 +1,9 @@
+// In browser, always use same-origin relative URLs to hide backend IP and eliminate CORS blocks.
+// In SSR / server-side, fallback to env or direct backend.
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || '';
+  typeof window !== 'undefined'
+    ? ''
+    : process.env.NEXT_PUBLIC_API_BASE_URL || 'https://3-25-134-111.sslip.io';
 
 export const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024; // 15MB
 

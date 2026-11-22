@@ -195,3 +195,195 @@ export async function getHealthStatus(): Promise<HealthResponse> {
     timeoutMs: 10000,
   });
 }
+
+/**
+ * 13. Authentication: Login
+ * Real endpoint: POST /api/v1/auth/login
+ */
+export async function loginApi(credentials: {
+  username: string;
+  password: string;
+}): Promise<import('../../types/api').TokenResponse> {
+  return apiClient<import('../../types/api').TokenResponse>('/api/v1/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(credentials),
+  });
+}
+
+/**
+ * 14. Authentication: Logout
+ * Real endpoint: POST /api/v1/auth/logout
+ */
+export async function logoutApi(): Promise<void> {
+  return apiClient<void>('/api/v1/auth/logout', {
+    method: 'POST',
+  });
+}
+
+/**
+ * 15. Authentication: Get Current Profile
+ * Real endpoint: GET /api/v1/auth/me
+ */
+export async function getCurrentUserProfile(): Promise<import('../../types/api').UserProfileResponse> {
+  return apiClient<import('../../types/api').UserProfileResponse>('/api/v1/auth/me', {
+    method: 'GET',
+  });
+}
+
+/**
+ * 16. Authentication: Change Password
+ * Real endpoint: POST /api/v1/auth/change-password
+ */
+export async function changePasswordApi(
+  payload: import('../../types/api').ChangePasswordRequest
+): Promise<void> {
+  return apiClient<void>('/api/v1/auth/change-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+/**
+ * 17. Admin: Dashboard Summary
+ * Real endpoint: GET /api/v1/admin/dashboard
+ */
+export async function getAdminDashboardSummary(): Promise<import('../../types/api').AdminDashboardResponse> {
+  return apiClient<import('../../types/api').AdminDashboardResponse>('/api/v1/admin/dashboard', {
+    method: 'GET',
+  });
+}
+
+/**
+ * 18. Admin: OCR Statistics
+ * Real endpoint: GET /api/v1/admin/ocr/statistics
+ */
+export async function getAdminOcrStatistics(): Promise<import('../../types/api').OcrStatisticsResponse> {
+  return apiClient<import('../../types/api').OcrStatisticsResponse>('/api/v1/admin/ocr/statistics', {
+    method: 'GET',
+  });
+}
+
+/**
+ * 19. Admin: Users List
+ * Real endpoint: GET /api/v1/admin/users
+ */
+export async function listAdminUsers(
+  skip: number = 0,
+  limit: number = 50,
+  search?: string
+): Promise<import('../../types/api').UserProfileResponse[]> {
+  const res = await apiClient<any>('/api/v1/admin/users', {
+    method: 'GET',
+    params: { skip, limit, search },
+  });
+  if (Array.isArray(res)) return res;
+  if (res && Array.isArray(res.users)) return res.users;
+  if (res && Array.isArray(res.items)) return res.items;
+  if (res && Array.isArray(res.data)) return res.data;
+  return [];
+}
+
+/**
+ * 20. Admin: Create User
+ * Real endpoint: POST /api/v1/admin/users
+ */
+export async function createAdminUser(
+  payload: import('../../types/api').CreateUserRequest
+): Promise<import('../../types/api').UserProfileResponse> {
+  return apiClient<import('../../types/api').UserProfileResponse>('/api/v1/admin/users', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+/**
+ * 21. Admin: Update User
+ * Real endpoint: PATCH /api/v1/admin/users/{user_id}
+ */
+export async function updateAdminUser(
+  userId: string,
+  payload: import('../../types/api').UpdateUserRequest
+): Promise<import('../../types/api').UserProfileResponse> {
+  return apiClient<import('../../types/api').UserProfileResponse>(`/api/v1/admin/users/${userId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+/**
+ * 22. Admin: Update User Status
+ * Real endpoint: PATCH /api/v1/admin/users/{user_id}/status
+ */
+export async function updateAdminUserStatus(
+  userId: string,
+  status: 'ACTIVE' | 'INACTIVE' | 'LOCKED'
+): Promise<import('../../types/api').UserProfileResponse> {
+  return apiClient<import('../../types/api').UserProfileResponse>(`/api/v1/admin/users/${userId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  });
+}
+
+/**
+ * 23. Admin: Assign User Roles
+ * Real endpoint: POST /api/v1/admin/users/{user_id}/roles
+ */
+export async function assignAdminUserRoles(
+  userId: string,
+  roleNames: string[]
+): Promise<import('../../types/api').UserProfileResponse> {
+  return apiClient<import('../../types/api').UserProfileResponse>(`/api/v1/admin/users/${userId}/roles`, {
+    method: 'POST',
+    body: JSON.stringify({ role_names: roleNames }),
+  });
+}
+
+/**
+ * 24. Admin: List Roles
+ * Real endpoint: GET /api/v1/admin/roles
+ */
+export async function listAdminRoles(): Promise<import('../../types/api').RoleItem[]> {
+  const res = await apiClient<any>('/api/v1/admin/roles', {
+    method: 'GET',
+  });
+  if (Array.isArray(res)) return res;
+  if (res && Array.isArray(res.roles)) return res.roles;
+  if (res && Array.isArray(res.items)) return res.items;
+  if (res && Array.isArray(res.data)) return res.data;
+  return [];
+}
+
+/**
+ * 25. Admin: List Permissions
+ * Real endpoint: GET /api/v1/admin/permissions
+ */
+export async function listAdminPermissions(): Promise<import('../../types/api').PermissionItem[]> {
+  const res = await apiClient<any>('/api/v1/admin/permissions', {
+    method: 'GET',
+  });
+  if (Array.isArray(res)) return res;
+  if (res && Array.isArray(res.permissions)) return res.permissions;
+  if (res && Array.isArray(res.items)) return res.items;
+  if (res && Array.isArray(res.data)) return res.data;
+  return [];
+}
+
+/**
+ * 26. Admin: List OCR Providers
+ * Real endpoint: GET /api/v1/admin/ocr/providers
+ */
+export async function listAdminOcrProviders(): Promise<any> {
+  return apiClient<any>('/api/v1/admin/ocr/providers', {
+    method: 'GET',
+  });
+}
+
+/**
+ * 27. Admin: System Health Diagnostic
+ * Real endpoint: GET /api/v1/admin/system/health
+ */
+export async function getAdminSystemHealth(): Promise<any> {
+  return apiClient<any>('/api/v1/admin/system/health', {
+    method: 'GET',
+  });
+}

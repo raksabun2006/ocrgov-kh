@@ -184,3 +184,93 @@ export interface AuditLogParams {
   resource_id?: string;
   limit?: number;
 }
+
+// Authentication & Session
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface UserProfileResponse {
+  id: string;
+  username: string;
+  email: string;
+  full_name: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'LOCKED' | string;
+  roles: string[];
+  permissions: string[];
+}
+
+export interface TokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in_seconds: number;
+  user: UserProfileResponse;
+}
+
+export interface ChangePasswordRequest {
+  current_password: string;
+  new_password: string;
+  confirm_password: string;
+}
+
+// Enterprise Administration
+export interface CreateUserRequest {
+  username: string;
+  email: string;
+  full_name: string;
+  password: string;
+  role_names?: string[];
+}
+
+export interface UpdateUserRequest {
+  email?: string | null;
+  full_name?: string | null;
+}
+
+export interface UserStatusRequest {
+  status: 'ACTIVE' | 'INACTIVE' | 'LOCKED';
+}
+
+export interface AssignRoleRequest {
+  role_names: string[];
+}
+
+export interface RoleItem {
+  id?: string;
+  name: string;
+  description?: string;
+  permissions?: string[];
+  created_at?: string;
+}
+
+export interface PermissionItem {
+  id?: string;
+  name: string;
+  code?: string;
+  description?: string;
+  module?: string;
+}
+
+export interface OcrStatisticsResponse {
+  total_documents?: number;
+  successful_extractions?: number;
+  average_confidence?: number;
+  type_distribution?: Record<string, number>;
+  success_rate?: number;
+}
+
+export interface AdminDashboardResponse {
+  total_users?: number;
+  total_documents?: number;
+  processed_documents?: number;
+  pending_verifications?: number;
+  failed_documents?: number;
+  recent_activity?: Array<{
+    id: string;
+    action: string;
+    user: string;
+    timestamp: string;
+    details?: string;
+  }>;
+}

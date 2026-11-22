@@ -12,6 +12,28 @@ export class ApiError extends Error {
   }
 }
 
+const TOKEN_KEY = 'gov_ocr_jwt_token';
+
+export function getAuthToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
+}
+
+export function setAuthToken(token: string, remember: boolean = true): void {
+  if (typeof window === 'undefined') return;
+  if (remember) {
+    localStorage.setItem(TOKEN_KEY, token);
+  } else {
+    sessionStorage.setItem(TOKEN_KEY, token);
+  }
+}
+
+export function clearAuthToken(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem(TOKEN_KEY);
+}
+
 interface RequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean | undefined | null>;
   timeoutMs?: number;
@@ -51,6 +73,12 @@ export async function apiClient<T>(
       headers['Content-Type'] = 'application/json';
     }
 
+    // Auto-attach Bearer token if available
+    const token = getAuthToken();
+    if (token && !headers['Authorization']) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(url, {
       ...fetchOptions,
       headers,
@@ -60,18 +88,28 @@ export async function apiClient<T>(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      let errorData: unknown;
-      try {
-        errorData = await response.json();
-      } catch {
-        errorData = await response.text();
+      if (response.status === 401) {
+        clearAuthToken();
       }
-      const message =
-        typeof errorData === 'object' && errorData !== null && 'detail' in errorData
-          ? JSON.stringify((errorData as { detail: unknown }).detail)
-          : `API Error: ${response.status} ${response.statusText}`;
 
-      throw new ApiError(message, response.status, errorData);
+      const rawBody = await response.text();
+      let errorMessage = rawBody || `HTTP Error ${response.status}`;
+      let parsedData: unknown = undefined;
+      try {
+        parsedData = JSON.parse(rawBody);
+        if (typeof parsedData === 'object' && parsedData !== null) {
+          const p = parsedData as Record<string, unknown>;
+          if (p.detail) {
+            errorMessage = typeof p.detail === 'string' ? p.detail : JSON.stringify(p.detail);
+          } else if (p.message) {
+            errorMessage = typeof p.message === 'string' ? p.message : JSON.stringify(p.message);
+          }
+        }
+      } catch {
+        // Use rawBody if response is not JSON
+      }
+
+      throw new ApiError(errorMessage, response.status, parsedData || rawBody);
     }
 
     if (response.status === 204) {

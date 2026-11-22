@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export type Language = 'km' | 'en';
 
@@ -18,6 +19,11 @@ export interface Translations {
   navSearch: string;
   navAudit: string;
   navSettings: string;
+  navUsers: string;
+  navRoles: string;
+  loginText: string;
+  logoutText: string;
+  accountSettings: string;
 
   // Actions
   startOcr: string;
@@ -127,6 +133,11 @@ const translations: Record<Language, Translations> = {
     navSearch: 'ស្វែងរកឯកសារ',
     navAudit: 'កំណត់ហេតុសវនកម្ម',
     navSettings: 'ការកំណត់ប្រព័ន្ធ',
+    navUsers: 'ការគ្រប់គ្រងអ្នកប្រើប្រាស់',
+    navRoles: 'តួនាទី និងសិទ្ធិអនុញ្ញាត',
+    loginText: 'ចូលប្រព័ន្ធ',
+    logoutText: 'ចាកចេញ',
+    accountSettings: 'គណនី និងសុវត្ថិភាព',
 
     startOcr: 'ចាប់ផ្តើមដំណើរការ OCR',
     quickScan: 'ស្កេនបង្កាន់ដៃរហ័ស',
@@ -228,6 +239,11 @@ const translations: Record<Language, Translations> = {
     navSearch: 'Search Documents',
     navAudit: 'Audit Trail Logs',
     navSettings: 'System Settings',
+    navUsers: 'User Management',
+    navRoles: 'Roles & Permissions',
+    loginText: 'Sign In',
+    logoutText: 'Sign Out',
+    accountSettings: 'Account & Security',
 
     startOcr: 'Start OCR Processing',
     quickScan: 'Scan Receipt / Voucher',
@@ -332,36 +348,17 @@ const LanguageContext = createContext<LanguageContextType>({
 });
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(() => {
-    if (typeof window !== 'undefined') {
-      const pathname = window.location.pathname;
-      if (pathname === '/en' || pathname.startsWith('/en/')) {
-        return 'en';
-      }
-      if (pathname === '/km' || pathname.startsWith('/km/')) {
-        return 'km';
-      }
-      const saved = localStorage.getItem('gov_ocr_lang') as Language;
-      if (saved === 'km' || saved === 'en') {
-        return saved;
-      }
-    }
-    return 'km';
-  });
+  const pathname = usePathname() || '';
 
-  // Keep state in sync with browser back / forward navigation
-  React.useEffect(() => {
-    const handlePopState = () => {
-      const pathname = window.location.pathname;
-      if (pathname === '/en' || pathname.startsWith('/en/')) {
-        setLanguageState('en');
-      } else if (pathname === '/km' || pathname.startsWith('/km/')) {
-        setLanguageState('km');
-      }
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  // Synchronously compute language from pathname on BOTH Server and Client during SSR
+  const isEn = pathname === '/en' || pathname.startsWith('/en/');
+  const [language, setLanguageState] = useState<Language>(isEn ? 'en' : 'km');
+
+  // Keep state in sync with pathname changes and browser back / forward navigation
+  useEffect(() => {
+    const isEnglish = pathname === '/en' || pathname.startsWith('/en/');
+    setLanguageState(isEnglish ? 'en' : 'km');
+  }, [pathname]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
@@ -369,17 +366,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('gov_ocr_lang', lang);
 
       // Synchronize URL path to reflect /km or /en
-      const pathname = window.location.pathname;
-      let newPath = pathname;
+      const currentPath = window.location.pathname;
+      let newPath = currentPath;
 
-      if (pathname === '/' || pathname === '/km' || pathname === '/en') {
+      if (currentPath === '/' || currentPath === '/km' || currentPath === '/en') {
         newPath = `/${lang}`;
-      } else if (pathname.startsWith('/km/')) {
-        newPath = `/${lang}${pathname.slice(3)}`;
-      } else if (pathname.startsWith('/en/')) {
-        newPath = `/${lang}${pathname.slice(3)}`;
+      } else if (currentPath.startsWith('/km/')) {
+        newPath = `/${lang}${currentPath.slice(3)}`;
+      } else if (currentPath.startsWith('/en/')) {
+        newPath = `/${lang}${currentPath.slice(3)}`;
       } else {
-        newPath = `/${lang}${pathname}`;
+        newPath = `/${lang}${currentPath}`;
       }
 
       const search = window.location.search;
