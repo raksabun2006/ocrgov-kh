@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --primary-navy: #17365D;
+  --primary-navy-dark: #0f2440;
+  --secondary-blue: #2563A6;
+  --secondary-blue-hover: #1e528a;
+  --accent-light: #F0F5FA;
+  --page-bg: #F5F7FA;
+  --card-bg: #FFFFFF;
+  --border-light: #E2E8F0;
+  --text-main: #1E293B;
+  --text-secondary: #64748B;
+  --status-success: #16A34A;
+  --status-warning: #D97706;
+  --status-error: #DC2626;
+  
+  --font-inter: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-battambang: 'Battambang', 'Khmer OS Battambang', 'Khmer OS', system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--page-bg);
+  color: var(--text-main);
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Khmer Unicode typography */
+.font-khmer {
+  font-family: var(--font-battambang);
+  line-height: 1.7;
+}
+
+/* Document OCR Viewer styling */
+.ocr-text-display {
+  font-family: var(--font-battambang);
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  tab-size: 4;
+}
+
+/* Custom scrollbar for data tables and text areas */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
