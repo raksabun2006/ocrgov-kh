@@ -272,14 +272,14 @@ export async function listAdminUsers(
   limit: number = 50,
   search?: string
 ): Promise<import('../../types/api').UserProfileResponse[]> {
-  const res = await apiClient<any>('/api/v1/admin/users', {
+  const res = await apiClient<Record<string, unknown>>('/api/v1/admin/users', {
     method: 'GET',
     params: { skip, limit, search },
   });
   if (Array.isArray(res)) return res;
-  if (res && Array.isArray(res.users)) return res.users;
-  if (res && Array.isArray(res.items)) return res.items;
-  if (res && Array.isArray(res.data)) return res.data;
+  if (res && Array.isArray(res.users)) return res.users as import('../../types/api').UserProfileResponse[];
+  if (res && Array.isArray(res.items)) return res.items as import('../../types/api').UserProfileResponse[];
+  if (res && Array.isArray(res.data)) return res.data as import('../../types/api').UserProfileResponse[];
   return [];
 }
 
@@ -343,13 +343,13 @@ export async function assignAdminUserRoles(
  * Real endpoint: GET /api/v1/admin/roles
  */
 export async function listAdminRoles(): Promise<import('../../types/api').RoleItem[]> {
-  const res = await apiClient<any>('/api/v1/admin/roles', {
+  const res = await apiClient<Record<string, unknown>>('/api/v1/admin/roles', {
     method: 'GET',
   });
   if (Array.isArray(res)) return res;
-  if (res && Array.isArray(res.roles)) return res.roles;
-  if (res && Array.isArray(res.items)) return res.items;
-  if (res && Array.isArray(res.data)) return res.data;
+  if (res && Array.isArray(res.roles)) return res.roles as import('../../types/api').RoleItem[];
+  if (res && Array.isArray(res.items)) return res.items as import('../../types/api').RoleItem[];
+  if (res && Array.isArray(res.data)) return res.data as import('../../types/api').RoleItem[];
   return [];
 }
 
@@ -358,13 +358,13 @@ export async function listAdminRoles(): Promise<import('../../types/api').RoleIt
  * Real endpoint: GET /api/v1/admin/permissions
  */
 export async function listAdminPermissions(): Promise<import('../../types/api').PermissionItem[]> {
-  const res = await apiClient<any>('/api/v1/admin/permissions', {
+  const res = await apiClient<Record<string, unknown>>('/api/v1/admin/permissions', {
     method: 'GET',
   });
   if (Array.isArray(res)) return res;
-  if (res && Array.isArray(res.permissions)) return res.permissions;
-  if (res && Array.isArray(res.items)) return res.items;
-  if (res && Array.isArray(res.data)) return res.data;
+  if (res && Array.isArray(res.permissions)) return res.permissions as import('../../types/api').PermissionItem[];
+  if (res && Array.isArray(res.items)) return res.items as import('../../types/api').PermissionItem[];
+  if (res && Array.isArray(res.data)) return res.data as import('../../types/api').PermissionItem[];
   return [];
 }
 
@@ -372,8 +372,8 @@ export async function listAdminPermissions(): Promise<import('../../types/api').
  * 26. Admin: List OCR Providers
  * Real endpoint: GET /api/v1/admin/ocr/providers
  */
-export async function listAdminOcrProviders(): Promise<any> {
-  return apiClient<any>('/api/v1/admin/ocr/providers', {
+export async function listAdminOcrProviders(): Promise<unknown> {
+  return apiClient<unknown>('/api/v1/admin/ocr/providers', {
     method: 'GET',
   });
 }
@@ -382,8 +382,8 @@ export async function listAdminOcrProviders(): Promise<any> {
  * 27. Admin: System Health Diagnostic
  * Real endpoint: GET /api/v1/admin/system/health
  */
-export async function getAdminSystemHealth(): Promise<any> {
-  return apiClient<any>('/api/v1/admin/system/health', {
+export async function getAdminSystemHealth(): Promise<unknown> {
+  return apiClient<unknown>('/api/v1/admin/system/health', {
     method: 'GET',
   });
 }

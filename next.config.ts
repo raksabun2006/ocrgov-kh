@@ -3,8 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   devIndicators: false,
-  cacheComponents: true,
-  partialPrefetching: true,
   async rewrites() {
     return [
       // Hide backend URL by reverse proxying all API requests through Next.js
