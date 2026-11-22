@@ -1,22 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --primary-navy: #17365D;
-  --primary-navy-dark: #0f2440;
-  --secondary-blue: #2563A6;
-  --secondary-blue-hover: #1e528a;
-  --accent-light: #F0F5FA;
+  --primary-navy: #172B4D;
+  --gov-blue: #2457A7;
+  --gov-blue-hover: #1c4587;
+  --gov-blue-light: #EFF4FC;
+  --gov-blue-border: #D0E0F7;
   --page-bg: #F5F7FA;
   --card-bg: #FFFFFF;
+  --border-soft: #E5EAF0;
   --border-light: #E2E8F0;
-  --text-main: #1E293B;
-  --text-secondary: #64748B;
-  --status-success: #16A34A;
-  --status-warning: #D97706;
-  --status-error: #DC2626;
+  --text-main: #172B4D;
+  --text-secondary: #5E6C84;
+  --text-muted: #7A869A;
+  
+  --status-success: #00875A;
+  --status-success-bg: #E3FCEF;
+  --status-warning: #FF991F;
+  --status-warning-bg: #FFF0B3;
+  --status-error: #DE350B;
+  --status-error-bg: #FFEBE6;
   
   --font-inter: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-battambang: 'Battambang', 'Khmer OS Battambang', 'Khmer OS', system-ui, sans-serif;
+  --font-khmer: 'Noto Sans Khmer', 'Battambang', 'Khmer OS Battambang', 'Khmer OS', system-ui, sans-serif;
 }
 
 body {
@@ -27,32 +33,66 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Khmer Unicode typography */
+/* Khmer Typography with Noto Sans Khmer priority */
 .font-khmer {
-  font-family: var(--font-battambang);
+  font-family: var(--font-khmer);
   line-height: 1.7;
 }
 
-/* Document OCR Viewer styling */
+:lang(km) {
+  font-family: var(--font-khmer);
+}
+
+/* OCR Document Display */
 .ocr-text-display {
-  font-family: var(--font-battambang);
-  line-height: 1.8;
+  font-family: var(--font-khmer);
+  line-height: 1.85;
   letter-spacing: 0.01em;
   tab-size: 4;
 }
 
-/* Custom scrollbar for data tables and text areas */
+/* Subtle Government Borders and Elevation */
+.gov-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-soft);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.04);
+}
+
+.gov-card:hover {
+  box-shadow: 0 4px 8px -2px rgba(9, 30, 66, 0.08), 0 0 1px rgba(9, 30, 66, 0.12);
+}
+
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #F4F5F7;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #C1C7D0;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #A5ADBA;
+}
+
+/* Hide Next.js Development Indicator / Portal ("N" Icon) */
+nextjs-portal,
+[data-nextjs-dev-overlay],
+[data-nextjs-toast],
+[data-nextjs-dialog-overlay],
+#nextjs-dev-overlay,
+next-route-announcer {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  z-index: -9999 !important;
 }

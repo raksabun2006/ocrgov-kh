@@ -4,10 +4,12 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   FileScan,
-  AlertCircle,
   ShieldCheck,
   RotateCcw,
   ChevronRight,
+  Cpu,
+  Layers,
+  ArrowRight,
 } from 'lucide-react';
 import { Shell } from '../../components/layout/Shell';
 import { DocumentUploader } from '../../components/ocr/DocumentUploader';
@@ -18,9 +20,12 @@ import { ClassificationBadgeAndModal } from '../../components/ocr/Classification
 import { uploadDocument, getDocumentFileUrl } from '../../lib/api/ocr';
 import { DocumentUploadResponse } from '../../types/api';
 import { useLanguage } from '../../lib/i18n';
+import { useToast } from '../../lib/toast-context';
+import { ErrorState } from '../../components/ui/ErrorState';
 
 export default function OcrProcessingPage() {
   const { t, language } = useLanguage();
+  const { success, error: toastError } = useToast();
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
@@ -36,6 +41,11 @@ export default function OcrProcessingPage() {
     try {
       const response = await uploadDocument(file, officerName);
       setResult(response);
+      success(
+        language === 'km' ? 'ដំណើរការ OCR ជោគជ័យ' : 'OCR Processing Successful',
+        `${response.original_filename} (${response.type_khmer_label})`
+      );
+
       if (response.birth_certificate_data) {
         setActiveTab('civil');
       } else {
@@ -43,11 +53,12 @@ export default function OcrProcessingPage() {
       }
     } catch (err: unknown) {
       console.error('OCR Processing error:', err);
-      setError(
+      const msg =
         err instanceof Error
           ? err.message
-          : 'Failed to process document with OCR. Please check file and server connection.'
-      );
+          : 'Failed to process document with OCR. Please check file and server connection.';
+      setError(msg);
+      toastError(language === 'km' ? 'ដំណើរការបរាជ័យ' : 'Processing Failed', msg);
     } finally {
       setIsProcessing(false);
     }
@@ -60,6 +71,10 @@ export default function OcrProcessingPage() {
         document_type: newType,
         type_khmer_label: newLabel,
       });
+      success(
+        language === 'km' ? 'បានកែប្រែប្រភេទឯកសារ' : 'Classification Updated',
+        newLabel
+      );
     }
   };
 
@@ -72,19 +87,19 @@ export default function OcrProcessingPage() {
   return (
     <Shell>
       <div className="space-y-4 sm:space-y-6">
-        {/* Page Title & Breadcrumb: Mobile-friendly flex layout */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 sm:pb-4 border-b border-[#E2E8F0]">
+        {/* Step Indicator Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 sm:pb-4 border-b border-[#E5EAF0]">
           <div>
-            <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-[#64748B] mb-1">
-              <Link href="/" className="hover:text-[#17365D] font-khmer">
+            <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-[#5E6C84] mb-1">
+              <Link href="/" className="hover:text-[#2457A7] font-khmer">
                 {t.navDashboard}
               </Link>
               <ChevronRight className="w-3.5 h-3.5" />
-              <span className="text-[#17365D] font-semibold font-khmer">
+              <span className="text-[#2457A7] font-semibold font-khmer">
                 {t.navOcr}
               </span>
             </div>
-            <h1 className="text-lg sm:text-2xl font-bold text-[#17365D] font-khmer">
+            <h1 className="text-lg sm:text-2xl font-bold text-[#172B4D] font-khmer">
               {t.navOcr}
             </h1>
           </div>
@@ -93,7 +108,7 @@ export default function OcrProcessingPage() {
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
               <button
                 onClick={handleReset}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-xs font-semibold rounded-lg border border-[#CBD5E1] bg-white text-[#475569] hover:bg-[#F1F5F9] font-khmer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-[#D0E0F7] bg-white text-[#5E6C84] hover:bg-[#F5F7FA] font-khmer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>{t.clearText}</span>
@@ -101,7 +116,7 @@ export default function OcrProcessingPage() {
 
               <Link
                 href={`/verify/${result.document_id}`}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:py-2 text-xs font-semibold rounded-lg bg-[#17365D] text-white hover:bg-[#0f2440] font-khmer shadow-xs"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-[#2457A7] text-white hover:bg-[#1c4587] font-khmer shadow-xs"
               >
                 <ShieldCheck className="w-4 h-4" />
                 <span>{t.verificationWorkspace}</span>
@@ -110,7 +125,7 @@ export default function OcrProcessingPage() {
           )}
         </div>
 
-        {/* Upload Section */}
+        {/* Step 1 & 2: Upload and Configuration View */}
         {!result && (
           <DocumentUploader
             onProcess={handleProcess}
@@ -120,56 +135,61 @@ export default function OcrProcessingPage() {
 
         {/* Error Alert */}
         {error && (
-          <div className="flex items-start gap-2.5 p-3.5 sm:p-4 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-xs sm:text-sm text-[#DC2626]">
-            <AlertCircle className="w-4 sm:w-5 h-4 sm:h-5 flex-shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <h4 className="font-semibold font-khmer">
-                {language === 'km' ? 'បញ្ហាដំណើរការ OCR' : 'OCR Processing Error'}
-              </h4>
-              <p className="text-xs leading-relaxed font-mono">{error}</p>
-            </div>
-          </div>
+          <ErrorState
+            title="បញ្ហាក្នុងការដំណើរការ OCR"
+            message={error}
+            onRetry={currentFile ? () => handleProcess(currentFile, 'officer') : undefined}
+          />
         )}
 
-        {/* Processing Spinner Banner */}
+        {/* Step 3: Dedicated Processing Feedback */}
         {isProcessing && (
-          <div className="p-6 sm:p-8 bg-white border border-[#CBD5E1] rounded-xl text-center space-y-2 sm:space-y-3">
-            <div className="inline-flex items-center justify-center w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-[#EFF6FF] text-[#17365D] animate-spin mb-1 sm:mb-2">
-              <svg className="w-5 sm:w-6 h-5 sm:h-6" fill="none" viewBox="0 0 24 24">
+          <div className="p-8 sm:p-12 bg-white border border-[#E5EAF0] rounded-xl text-center space-y-4 shadow-xs">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#EFF4FC] text-[#2457A7] animate-spin">
+              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
               </svg>
             </div>
-            <h3 className="text-sm sm:text-base font-bold text-[#17365D] font-khmer">
-              {t.processing}
-            </h3>
-            <p className="text-xs text-[#64748B] max-w-md mx-auto font-khmer leading-relaxed">
-              {t.processingSub}
-            </p>
+            <div className="space-y-1">
+              <h3 className="text-sm sm:text-base font-bold text-[#172B4D] font-khmer">
+                {t.processing}
+              </h3>
+              <p className="text-xs text-[#5E6C84] max-w-md mx-auto font-khmer leading-relaxed">
+                {t.processingSub}
+              </p>
+            </div>
+
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-lg bg-[#F5F7FA] border border-[#E5EAF0] text-xs text-[#5E6C84]">
+              <span className="font-mono text-[#2457A7] font-semibold">Step 3 of 4:</span>
+              <span className="font-khmer">OpenCV Filtering → Tesseract Dual OCR → Civil AI Extraction</span>
+            </div>
           </div>
         )}
 
-        {/* Main Side-by-Side OCR Workspace: Stacked on mobile, side-by-side on lg screens */}
+        {/* Step 4: OCR Results Workspace */}
         {result && (
           <div className="space-y-4 sm:space-y-6">
-            {/* Document Metadata & Classification Banner */}
-            <div className="bg-white border border-[#E2E8F0] rounded-xl p-3.5 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            {/* Metadata & Classification Bar */}
+            <div className="bg-white border border-[#E5EAF0] rounded-xl p-3.5 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-[#64748B] font-khmer flex-shrink-0">ឯកសារ៖</span>
-                  <span className="text-xs sm:text-sm font-bold text-[#1E293B] truncate" title={result.original_filename}>
+                  <span className="text-xs text-[#5E6C84] font-khmer flex-shrink-0">ឯកសារ៖</span>
+                  <span className="text-xs sm:text-sm font-bold text-[#172B4D] truncate" title={result.original_filename}>
                     {result.original_filename}
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#64748B]">
-                  <span>ID: <code className="font-mono text-[#17365D] text-[10px]">{result.document_id}</code></span>
+                <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#5E6C84]">
+                  <span>ID: <code className="font-mono text-[#2457A7] text-[10px]">{result.document_id}</code></span>
                   <span>•</span>
                   <span>{new Date(result.created_at).toLocaleDateString()}</span>
+                  <span>•</span>
+                  <span>{(result.file_size_bytes / 1024).toFixed(1)} KB</span>
                 </div>
               </div>
 
               {/* Classification badge with override capability */}
-              <div className="pt-2 sm:pt-0 border-t sm:border-0 border-[#F1F5F9]">
+              <div className="pt-2 sm:pt-0 border-t sm:border-0 border-[#F5F7FA]">
                 <ClassificationBadgeAndModal
                   documentId={result.document_id}
                   currentType={result.document_type}
@@ -182,7 +202,7 @@ export default function OcrProcessingPage() {
 
             {/* Split Workspace: Document Preview (Left) & OCR Extraction / Structured Data (Right) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-start">
-              {/* Left Panel: Document Preview */}
+              {/* Left Panel: High Resolution Document Preview */}
               <div className="w-full">
                 <DocumentViewer
                   file={currentFile}
@@ -193,17 +213,16 @@ export default function OcrProcessingPage() {
                 />
               </div>
 
-              {/* Right Panel: Tabs for Extracted Text vs Civil Registration Fields */}
+              {/* Right Panel: Extracted Text and Structured Civil Registration Tab */}
               <div className="w-full space-y-4">
-                {/* Tab Switcher if Birth Certificate data exists */}
                 {result.birth_certificate_data && (
-                  <div className="flex items-center border-b border-[#E2E8F0] bg-white rounded-t-xl px-3 sm:px-4 pt-2.5 sm:pt-3 overflow-x-auto">
+                  <div className="flex items-center border-b border-[#E5EAF0] bg-white rounded-t-xl px-3 sm:px-4 pt-2.5 sm:pt-3 overflow-x-auto">
                     <button
                       onClick={() => setActiveTab('civil')}
                       className={`pb-2 px-2.5 sm:px-3 text-xs font-semibold border-b-2 font-khmer transition-colors whitespace-nowrap ${
                         activeTab === 'civil'
-                          ? 'border-[#17365D] text-[#17365D]'
-                          : 'border-transparent text-[#64748B] hover:text-[#1E293B]'
+                          ? 'border-[#2457A7] text-[#2457A7]'
+                          : 'border-transparent text-[#5E6C84] hover:text-[#172B4D]'
                       }`}
                     >
                       {t.structuredDataTab}
@@ -212,8 +231,8 @@ export default function OcrProcessingPage() {
                       onClick={() => setActiveTab('text')}
                       className={`pb-2 px-2.5 sm:px-3 text-xs font-semibold border-b-2 font-khmer transition-colors whitespace-nowrap ${
                         activeTab === 'text'
-                          ? 'border-[#17365D] text-[#17365D]'
-                          : 'border-transparent text-[#64748B] hover:text-[#1E293B]'
+                          ? 'border-[#2457A7] text-[#2457A7]'
+                          : 'border-transparent text-[#5E6C84] hover:text-[#172B4D]'
                       }`}
                     >
                       {t.rawTextTab}

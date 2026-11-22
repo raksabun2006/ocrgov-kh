@@ -1,130 +1,49 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Menu, Activity } from 'lucide-react';
+import React from 'react';
+import { Menu } from 'lucide-react';
 import { useLanguage } from '../../lib/i18n';
-import { getHealthStatus } from '../../lib/api/ocr';
-import { HealthResponse } from '../../types/api';
+import { LanguageFlagSwitcher } from './LanguageFlagSwitcher';
 
 interface HeaderProps {
   onMobileMenuClick: () => void;
   collapsed: boolean;
 }
 
-export function Header({ onMobileMenuClick, collapsed }: HeaderProps) {
-  const { t, language, setLanguage } = useLanguage();
-  const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [isOnline, setIsOnline] = useState<boolean>(true);
-
-  useEffect(() => {
-    let isMounted = true;
-    const checkSystemHealth = async () => {
-      try {
-        const res = await getHealthStatus();
-        if (isMounted) {
-          setHealth(res);
-          setIsOnline(res.status === 'online');
-        }
-      } catch {
-        if (isMounted) {
-          setIsOnline(false);
-        }
-      }
-    };
-
-    checkSystemHealth();
-    const interval = setInterval(checkSystemHealth, 30000);
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
-  }, []);
+export function Header({ onMobileMenuClick }: HeaderProps) {
+  const { t } = useLanguage();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between h-16 sm:h-20 px-3 sm:px-6 lg:px-8 bg-white border-b border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-      {/* Left: Hamburger button for mobile & Clean Institutional Header */}
+    <header className="sticky top-0 z-30 flex items-center justify-between h-16 sm:h-20 px-3 sm:px-6 lg:px-8 bg-white border-b border-[#E5EAF0] shadow-[0_1px_2px_rgba(9,30,66,0.03)]">
+      {/* Left: Mobile hamburger & Clean Government Header */}
       <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
         <button
           onClick={onMobileMenuClick}
-          className="lg:hidden p-2 -ml-1 text-[#475569] hover:bg-[#F1F5F9] rounded-lg transition-colors focus:outline-hidden"
+          className="lg:hidden p-2 -ml-1 text-[#5E6C84] hover:bg-[#F5F7FA] rounded-lg transition-colors focus:outline-hidden"
           aria-label="Open navigation menu"
         >
           <Menu className="w-5 h-5" strokeWidth={2} />
         </button>
 
         <div className="flex flex-col min-w-0">
-          <h1 className="text-xs sm:text-base lg:text-lg font-bold text-[#17365D] tracking-tight font-khmer truncate">
-            ប្រព័ន្ធឌីជីថលសម្រាប់សម្គាល់អត្ថបទក្នុងឯកសារ
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] sm:text-xs font-semibold text-[#2457A7] uppercase tracking-wide font-khmer hidden sm:inline">
+              ព្រះរាជាណាចក្រកម្ពុជា
+            </span>
+            <span className="hidden sm:inline text-[#C1C7D0]">•</span>
+            <span className="text-[10px] sm:text-xs text-[#5E6C84] hidden md:inline">
+              Kingdom of Cambodia
+            </span>
+          </div>
+          <h1 className="text-xs sm:text-base lg:text-lg font-bold text-[#172B4D] tracking-tight font-khmer truncate">
+            {t.systemTitle}
           </h1>
-          <span className="hidden sm:inline-block text-[11px] lg:text-xs text-[#64748B] font-medium tracking-normal truncate">
-            Government Document Intelligence System
-          </span>
         </div>
       </div>
 
-      {/* Right: Live health badge & Touch-friendly language switcher */}
+      {/* Right: National Flag Country Switcher (Only 1 flag when no hover, 2 flags on hover to switch) */}
       <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-        {/* Backend Online status badge */}
-        <div
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
-            isOnline
-              ? 'bg-[#F0FDF4] text-[#16A34A] border-[#BBF7D0]'
-              : 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]'
-          }`}
-          title={
-            health?.ocr_engine
-              ? `OCR Engine: Ready (${health.ocr_engine.languages.join(', ')})`
-              : 'Backend connection status'
-          }
-        >
-          <span className="relative flex h-2 w-2">
-            <span
-              className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                isOnline ? 'bg-[#16A34A]' : 'bg-[#DC2626]'
-              }`}
-            />
-            <span
-              className={`relative inline-flex rounded-full h-2 w-2 ${
-                isOnline ? 'bg-[#16A34A]' : 'bg-[#DC2626]'
-              }`}
-            />
-          </span>
-          <span className="hidden md:inline font-khmer">
-            {isOnline
-              ? language === 'km'
-                ? 'ប្រព័ន្ធដំណើរការធម្មតា'
-                : 'OCR System Online'
-              : language === 'km'
-              ? 'គ្មានការតភ្ជាប់'
-              : 'Offline'}
-          </span>
-        </div>
-
-        {/* Bilingual language switcher with comfortable mobile tap target */}
-        <div className="flex items-center rounded-lg border border-[#CBD5E1] p-0.5 bg-[#F8FAFC]">
-          <button
-            onClick={() => setLanguage('km')}
-            className={`px-2.5 py-1.5 sm:py-1 text-xs font-semibold rounded-md transition-colors ${
-              language === 'km'
-                ? 'bg-[#17365D] text-white shadow-xs font-khmer'
-                : 'text-[#475569] hover:text-[#1E293B] font-khmer'
-            }`}
-            aria-label="Khmer Language"
-          >
-            ខ្មែរ
-          </button>
-          <button
-            onClick={() => setLanguage('en')}
-            className={`px-2.5 py-1.5 sm:py-1 text-xs font-semibold rounded-md transition-colors ${
-              language === 'en'
-                ? 'bg-[#17365D] text-white shadow-xs'
-                : 'text-[#475569] hover:text-[#1E293B]'
-            }`}
-            aria-label="English Language"
-          >
-            English
-          </button>
-        </div>
+        <LanguageFlagSwitcher />
       </div>
     </header>
   );

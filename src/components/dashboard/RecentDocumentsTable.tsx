@@ -1,19 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   FileText,
-  Eye,
   CheckCircle2,
   Clock,
   ArrowRight,
-  ExternalLink,
   ShieldCheck,
+  Search,
+  Download,
 } from 'lucide-react';
 import { DocumentMetadataResponse } from '../../types/api';
 import { DOCUMENT_TYPE_LABELS } from '../../lib/config';
+import { getDocumentFileUrl } from '../../lib/api/ocr';
 import { useLanguage } from '../../lib/i18n';
+import { SkeletonTable } from '../ui/LoadingSkeleton';
+import { EmptyState } from '../ui/EmptyState';
 
 interface RecentDocumentsTableProps {
   documents: DocumentMetadataResponse[];
@@ -25,112 +28,107 @@ export function RecentDocumentsTable({
   isLoading,
 }: RecentDocumentsTableProps) {
   const { t, language } = useLanguage();
+  const [filterText, setFilterText] = useState('');
 
-  const formatDate = (isoStr: string) => {
-    try {
-      const d = new Date(isoStr);
-      return d.toLocaleDateString(language === 'km' ? 'km-KH' : 'en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    } catch {
-      return isoStr;
-    }
-  };
+  const filtered = documents.filter((doc) =>
+    doc.original_filename.toLowerCase().includes(filterText.toLowerCase()) ||
+    doc.document_type.toLowerCase().includes(filterText.toLowerCase())
+  );
 
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-xl shadow-xs overflow-hidden">
-      {/* Table Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[#E2E8F0] bg-white">
+    <div className="bg-white border border-[#E5EAF0] rounded-xl shadow-xs overflow-hidden">
+      {/* Table Header with Search & View All */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-5 py-3.5 border-b border-[#E5EAF0] bg-white">
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-[#17365D]" strokeWidth={2} />
-          <h3 className="text-sm font-bold text-[#17365D] uppercase tracking-wider font-khmer">
+          <FileText className="w-4 h-4 text-[#2457A7]" strokeWidth={2} />
+          <h3 className="text-xs sm:text-sm font-bold text-[#172B4D] uppercase tracking-wider font-khmer">
             {t.recentActivity}
           </h3>
         </div>
 
-        <Link
-          href="/documents"
-          className="inline-flex items-center gap-1 text-xs font-semibold text-[#2563A6] hover:text-[#17365D] font-khmer"
-        >
-          <span>{t.viewAll}</span>
-          <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
-        </Link>
+        <div className="flex items-center gap-2.5">
+          <div className="relative">
+            <input
+              type="text"
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              placeholder="ស្វែងរកក្នុងតារាង..."
+              className="text-xs bg-[#F5F7FA] border border-[#D0E0F7] rounded-md pl-7 pr-2.5 py-1 text-[#172B4D] font-khmer w-36 sm:w-48"
+            />
+            <Search className="w-3.5 h-3.5 text-[#5E6C84] absolute left-2 top-2" />
+          </div>
+
+          <Link
+            href="/documents"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-[#2457A7] hover:underline font-khmer whitespace-nowrap"
+          >
+            <span>{t.viewAll}</span>
+            <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
+          </Link>
+        </div>
       </div>
 
       {/* Table Content */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-[#F1F5F9] bg-[#F8FAFC] text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
-              <th className="py-3 px-5 font-khmer">ឈ្មោះឯកសារ</th>
-              <th className="py-3 px-4 font-khmer">{t.documentTypeLabel}</th>
-              <th className="py-3 px-4 font-khmer">{t.statusLabel}</th>
-              <th className="py-3 px-4 font-khmer">{t.confidenceScore}</th>
-              <th className="py-3 px-4 font-khmer">{t.uploadedAt}</th>
-              <th className="py-3 px-5 text-right font-khmer">សកម្មភាព</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#F1F5F9] text-xs">
-            {isLoading ? (
-              <tr>
-                <td colSpan={6} className="py-8 text-center text-[#64748B]">
-                  <div className="inline-flex items-center gap-2 font-khmer">
-                    <svg className="animate-spin h-4 w-4 text-[#17365D]" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                    </svg>
-                    <span>កំពុងទាញយកទិន្នន័យ...</span>
-                  </div>
-                </td>
+        {isLoading ? (
+          <div className="p-4">
+            <SkeletonTable rows={5} />
+          </div>
+        ) : filtered.length === 0 ? (
+          <EmptyState
+            icon={FileText}
+            title={t.noDocumentsYet}
+            description="ផ្ទុកឡើងឯកសារថ្មីដើម្បីចាប់ផ្តើមដំណើរការ OCR និងរក្សាទុកក្នុងបណ្ណសារ"
+            action={
+              <Link
+                href="/ocr"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#2457A7] text-white text-xs font-semibold hover:bg-[#1c4587] font-khmer shadow-xs"
+              >
+                <span>{t.startOcr}</span>
+              </Link>
+            }
+          />
+        ) : (
+          <table className="w-full text-left border-collapse min-w-[640px]">
+            <thead>
+              <tr className="border-b border-[#E5EAF0] bg-[#F5F7FA] text-[11px] font-semibold text-[#5E6C84] uppercase tracking-wider">
+                <th className="py-3 px-4 sm:px-5 font-khmer">ឈ្មោះឯកសារ</th>
+                <th className="py-3 px-3 sm:px-4 font-khmer">{t.documentTypeLabel}</th>
+                <th className="py-3 px-3 sm:px-4 font-khmer">{t.statusLabel}</th>
+                <th className="py-3 px-3 sm:px-4 font-khmer">{t.confidenceScore}</th>
+                <th className="py-3 px-3 sm:px-4 font-khmer">{t.uploadedAt}</th>
+                <th className="py-3 px-4 sm:px-5 text-right font-khmer">សកម្មភាព</th>
               </tr>
-            ) : documents.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="py-10 text-center text-[#94A3B8] font-khmer">
-                  <div className="flex flex-col items-center justify-center">
-                    <FileText className="w-8 h-8 stroke-1 mb-2 text-[#CBD5E1]" />
-                    <p>{t.noDocumentsYet}</p>
-                    <Link
-                      href="/ocr"
-                      className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#17365D] text-white text-xs font-semibold hover:bg-[#0f2440]"
-                    >
-                      <span>{t.startOcr}</span>
-                    </Link>
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              documents.map((doc) => {
+            </thead>
+            <tbody className="divide-y divide-[#E5EAF0] text-xs">
+              {filtered.map((doc) => {
                 const typeLabel =
                   DOCUMENT_TYPE_LABELS[doc.document_type]?.km || doc.document_type;
                 const isProcessed = doc.status === 'PROCESSED';
 
                 return (
-                  <tr key={doc.document_id} className="hover:bg-[#F8FAFC] transition-colors">
-                    <td className="py-3 px-5 font-medium text-[#1E293B]">
+                  <tr key={doc.document_id} className="hover:bg-[#F5F7FA] transition-colors">
+                    <td className="py-3 px-4 sm:px-5 font-semibold text-[#172B4D]">
                       <div className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-[#64748B] flex-shrink-0" strokeWidth={1.75} />
-                        <span className="truncate max-w-[220px]" title={doc.original_filename}>
+                        <FileText className="w-4 h-4 text-[#5E6C84] flex-shrink-0" strokeWidth={1.75} />
+                        <span className="truncate max-w-[200px] sm:max-w-[240px]" title={doc.original_filename}>
                           {doc.original_filename}
                         </span>
                       </div>
                     </td>
 
-                    <td className="py-3 px-4">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#EFF6FF] text-[#17365D] border border-[#BFDBFE] font-khmer">
+                    <td className="py-3 px-3 sm:px-4">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#EFF4FC] text-[#2457A7] border border-[#D0E0F7] font-khmer whitespace-nowrap">
                         {typeLabel}
                       </span>
                     </td>
 
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-3 sm:px-4">
                       <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium border ${
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium border whitespace-nowrap ${
                           isProcessed
-                            ? 'bg-[#F0FDF4] text-[#16A34A] border-[#BBF7D0]'
-                            : 'bg-[#FFFBEB] text-[#D97706] border-[#FDE68A]'
+                            ? 'bg-[#E3FCEF] text-[#00875A] border-[#ABF5D1]'
+                            : 'bg-[#FFF0B3] text-[#FF991F] border-[#FFE58F]'
                         }`}
                       >
                         {isProcessed ? (
@@ -142,31 +140,44 @@ export function RecentDocumentsTable({
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 font-mono font-medium text-[#1E293B]">
+                    <td className="py-3 px-3 sm:px-4 font-mono font-medium text-[#172B4D]">
                       {doc.average_confidence !== null
-                        ? `${(doc.average_confidence * 100).toFixed(1)}%`
+                        ? `${(doc.average_confidence * 100).toFixed(0)}%`
                         : '—'}
                     </td>
 
-                    <td className="py-3 px-4 text-[#64748B]">
-                      {formatDate(doc.created_at)}
+                    <td className="py-3 px-3 sm:px-4 text-[#5E6C84] whitespace-nowrap">
+                      {new Date(doc.created_at).toLocaleDateString(
+                        language === 'km' ? 'km-KH' : 'en-US',
+                        { month: 'short', day: 'numeric', year: 'numeric' }
+                      )}
                     </td>
 
-                    <td className="py-3 px-5 text-right space-x-1.5">
+                    <td className="py-3 px-4 sm:px-5 text-right whitespace-nowrap space-x-1">
                       <Link
                         href={`/verify/${doc.document_id}`}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-[#F1F5F9] text-[#17365D] hover:bg-[#E2E8F0] font-khmer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-[#F5F7FA] text-[#2457A7] hover:bg-[#E5EAF0] font-khmer transition-colors"
                       >
                         <ShieldCheck className="w-3 h-3" />
                         <span>{t.actionVerify}</span>
                       </Link>
+
+                      <a
+                        href={getDocumentFileUrl(doc.document_id)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center p-1 rounded-md text-[#5E6C84] hover:text-[#2457A7]"
+                        title="Download file"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                      </a>
                     </td>
                   </tr>
                 );
-              })
-            )}
-          </tbody>
-        </table>
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

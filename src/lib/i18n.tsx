@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 export type Language = 'km' | 'en';
 
@@ -8,14 +8,27 @@ export interface Translations {
   systemTitle: string;
   systemSubtitle: string;
   systemBadge: string;
+  
+  // 8 Specific Navigation Items
   navDashboard: string;
   navOcr: string;
   navReceipts: string;
   navDocuments: string;
+  navVerify: string;
+  navSearch: string;
   navAudit: string;
   navSettings: string;
+
+  // Actions
   startOcr: string;
   quickScan: string;
+  newOcrAction: string;
+
+  // Upload & Steps
+  step1Title: string;
+  step2Title: string;
+  step3Title: string;
+  step4Title: string;
   uploadAreaTitle: string;
   uploadAreaSubtitle: string;
   uploadFormats: string;
@@ -26,6 +39,8 @@ export interface Translations {
   processingSub: string;
   uploading: string;
   successUpload: string;
+
+  // OCR Results & Viewer
   extractedText: string;
   documentPreview: string;
   copyText: string;
@@ -45,6 +60,8 @@ export interface Translations {
   fileSizeLabel: string;
   hashLabel: string;
   uploadedAt: string;
+
+  // Statistics
   totalDocuments: string;
   processedDocs: string;
   pendingDocs: string;
@@ -53,6 +70,8 @@ export interface Translations {
   viewAll: string;
   noDocumentsYet: string;
   noAuditLogsYet: string;
+
+  // Table actions
   actionView: string;
   actionDelete: string;
   actionVerify: string;
@@ -62,7 +81,10 @@ export interface Translations {
   overrideClassification: string;
   structuredDataTab: string;
   rawTextTab: string;
+
+  // Verification
   verificationWorkspace: string;
+  verificationQueue: string;
   birthCertInfo: string;
   fullNameKhmer: string;
   fullNameEnglish: string;
@@ -76,6 +98,10 @@ export interface Translations {
   reviewerName: string;
   finalizeVerification: string;
   saveCorrections: string;
+
+  // Service specs
+  ocrServiceStatus: string;
+  ocrEngineInfo: string;
   auditTrailTitle: string;
   onlineStatus: string;
   offlineStatus: string;
@@ -89,16 +115,28 @@ export interface Translations {
 const translations: Record<Language, Translations> = {
   km: {
     systemTitle: 'ប្រព័ន្ធឌីជីថលសម្រាប់សម្គាល់អត្ថបទក្នុងឯកសារ',
-    systemSubtitle: 'Government Document Intelligence & OCR System',
+    systemSubtitle: 'Government Document Intelligence System',
     systemBadge: 'ព្រះរាជាណាចក្រកម្ពុជា • ជាតិ សាសនា ព្រះមហាក្សត្រ',
-    navDashboard: 'ផ្ទាំងគ្រប់គ្រងទូទៅ',
+    
+    // 8 Navigation items
+    navDashboard: 'ផ្ទាំងគ្រប់គ្រង',
     navOcr: 'ដំណើរការ OCR ឯកសារ',
     navReceipts: 'ស្កេនបង្កាន់ដៃ / វិក្កយបត្រ',
     navDocuments: 'បណ្ណសារឯកសារឌីជីថល',
+    navVerify: 'ផ្ទៀងផ្ទាត់ឯកសារ',
+    navSearch: 'ស្វែងរកឯកសារ',
     navAudit: 'កំណត់ហេតុសវនកម្ម',
-    navSettings: 'ការកំណត់ & អត្តសញ្ញាណមន្ត្រី',
+    navSettings: 'ការកំណត់ប្រព័ន្ធ',
+
     startOcr: 'ចាប់ផ្តើមដំណើរការ OCR',
     quickScan: 'ស្កេនបង្កាន់ដៃរហ័ស',
+    newOcrAction: 'ដំណើរការ OCR ថ្មី',
+
+    step1Title: 'ជំហានទី ១៖ ផ្ទុកឡើងឯកសារ',
+    step2Title: 'ជំហានទី ២៖ កំណត់រចនាសម្ព័ន្ធ OCR',
+    step3Title: 'ជំហានទី ៣៖ កំពុងដំណើរការសម្គាល់',
+    step4Title: 'ជំហានទី ៤៖ លទ្ធផល OCR & ផ្ទៀងផ្ទាត់',
+
     uploadAreaTitle: 'ទម្លាក់ឯកសារនៅទីនេះ ឬ ចុចដើម្បីជ្រើសរើស',
     uploadAreaSubtitle: 'គាំទ្រឯកសាររដ្ឋបាលជាទម្រង់ PDF, PNG, JPG, JPEG',
     uploadFormats: 'ទម្រង់ឯកសារ៖ PDF, PNG, JPG, JPEG',
@@ -106,15 +144,16 @@ const translations: Record<Language, Translations> = {
     selectFile: 'ជ្រើសរើសឯកសារ',
     dragDropFile: 'ទម្លាក់ឯកសារនៅទីនេះ',
     processing: 'កំពុងដំណើរការ OCR...',
-    processingSub: 'ប្រព័ន្ធកំពុងពិនិត្យ កែតម្រូវ និងសម្គាល់អក្សរខ្មែរ និងអង់គ្លេស',
+    processingSub: 'ប្រព័ន្ធកំពុងសម្អាតរូបភាព (Deskew, CLAHE, Binarization) និងសម្គាល់អក្សរខ្មែរ និងអង់គ្លេស',
     uploading: 'កំពុងផ្ទុកឡើងឯកសារ...',
     successUpload: 'ដំណើរការ OCR ជោគជ័យ',
+
     extractedText: 'អត្ថបទដែលបានសម្គាល់ (OCR Text)',
     documentPreview: 'ទិដ្ឋភាពឯកសារដើម',
     copyText: 'ចម្លងអត្ថបទ',
     copied: 'បានចម្លងរួចរាល់',
     downloadTxt: 'ទាញយកជា TXT',
-    downloadDocx: 'ទាញយកជា Word (DOCX)',
+    downloadDocx: 'ទាញយកជា Word (DOC)',
     clearText: 'សម្អាត / កំណត់ឡើងវិញ',
     resetConfirmTitle: 'បញ្ជាក់ការសម្អាតទិន្នន័យ',
     resetConfirmDesc: 'តើលោកអ្នកពិតជាចង់សម្អាតលទ្ធផល OCR និងឯកសារដែលបានជ្រើសរើសមែនទេ?',
@@ -124,18 +163,20 @@ const translations: Record<Language, Translations> = {
     documentTypeLabel: 'ប្រភេទឯកសាររដ្ឋបាល',
     classificationScore: 'កម្រិតភាពត្រឹមត្រូវនៃការចាត់ថ្នាក់',
     statusLabel: 'ស្ថានភាព',
-    confidenceScore: 'កម្រិតទំនុកចិត្តមធ្យម (Confidence)',
+    confidenceScore: 'កម្រិតទំនុកចិត្តមធ្យម',
     fileSizeLabel: 'ទំហំឯកសារ',
     hashLabel: 'លេខកូដសុចរិតភាព (SHA-256)',
     uploadedAt: 'កាលបរិច្ឆេទផ្ទុកឡើង',
-    totalDocuments: 'ឯកសារសរុបក្នុងប្រព័ន្ធ',
-    processedDocs: 'ដំណើរការជោគជ័យ',
-    pendingDocs: 'រង់ចាំការផ្ទៀងផ្ទាត់',
-    failedDocs: 'បរាជ័យ',
+
+    totalDocuments: 'ឯកសារសរុប',
+    processedDocs: 'ឯកសារដំណើរការជោគជ័យ',
+    pendingDocs: 'ឯកសាររង់ចាំផ្ទៀងផ្ទាត់',
+    failedDocs: 'ឯកសារមានបញ្ហា / មិនកំណត់',
     recentActivity: 'សកម្មភាព OCR ថ្មីៗ',
     viewAll: 'មើលទាំងអស់',
     noDocumentsYet: 'មិនទាន់មានឯកសារនៅក្នុងប្រព័ន្ធនៅឡើយទេ',
     noAuditLogsYet: 'មិនទាន់មានកំណត់ហេតុសវនកម្មនៅឡើយទេ',
+
     actionView: 'ពិនិត្យ',
     actionDelete: 'លុប',
     actionVerify: 'ផ្ទៀងផ្ទាត់ទិន្នន័យ',
@@ -145,7 +186,9 @@ const translations: Record<Language, Translations> = {
     overrideClassification: 'កែប្រែប្រភេទឯកសារ',
     structuredDataTab: 'ទិន្នន័យរចនាសម្ព័ន្ធ (Civil Registration)',
     rawTextTab: 'អត្ថបទ OCR ពេញលេញ',
+
     verificationWorkspace: 'ផ្ទាំងផ្ទៀងផ្ទាត់ទិន្នន័យដោយមន្ត្រី',
+    verificationQueue: 'ជួរឯកសារត្រូវផ្ទៀងផ្ទាត់',
     birthCertInfo: 'ព័ត៌មានសំបុត្រកំណើតផ្លូវការ',
     fullNameKhmer: 'គោត្តនាម និងនាម (ខ្មែរ)',
     fullNameEnglish: 'ឈ្មោះជាឡាតាំង (English)',
@@ -159,8 +202,11 @@ const translations: Record<Language, Translations> = {
     reviewerName: 'ឈ្មោះមន្ត្រីត្រួតពិនិត្យ',
     finalizeVerification: 'បញ្ជាក់និងបញ្ចប់ការផ្ទៀងផ្ទាត់ជាផ្លូវការ',
     saveCorrections: 'រក្សាទុកការកែតម្រូវ',
+
+    ocrServiceStatus: 'ស្ថានភាពសេវា OCR ផ្លូវការ',
+    ocrEngineInfo: 'ព័ត៌មានលម្អិតម៉ាស៊ីន OCR',
     auditTrailTitle: 'កំណត់ត្រាសវនកម្មប្រព័ន្ធរដ្ឋបាល',
-    onlineStatus: 'ដំណើរការធម្មតា',
+    onlineStatus: 'ប្រព័ន្ធដំណើរការធម្មតា',
     offlineStatus: 'មិនអាចភ្ជាប់បាន',
     switchLang: 'ភាសា / Language',
     zoomIn: 'ពង្រីក',
@@ -169,17 +215,29 @@ const translations: Record<Language, Translations> = {
     fitScreen: 'តម្រូវតាមអេក្រង់',
   },
   en: {
-    systemTitle: 'Government Document Intelligence & OCR System',
+    systemTitle: 'Government Document Intelligence System',
     systemSubtitle: 'Kingdom of Cambodia • Nation Religion King',
     systemBadge: 'Kingdom of Cambodia • Nation Religion King',
+    
+    // 8 Navigation items
     navDashboard: 'Dashboard Overview',
     navOcr: 'OCR Document Processing',
-    navReceipts: 'Quick Receipt Scan',
+    navReceipts: 'Scan Receipt / Voucher',
     navDocuments: 'Digital Document Archive',
+    navVerify: 'Document Verification',
+    navSearch: 'Search Documents',
     navAudit: 'Audit Trail Logs',
-    navSettings: 'Settings & Identity',
+    navSettings: 'System Settings',
+
     startOcr: 'Start OCR Processing',
     quickScan: 'Scan Receipt / Voucher',
+    newOcrAction: 'New OCR Processing',
+
+    step1Title: 'Step 1: Upload Document',
+    step2Title: 'Step 2: OCR Configuration',
+    step3Title: 'Step 3: Processing Recognition',
+    step4Title: 'Step 4: OCR Results & Verification',
+
     uploadAreaTitle: 'Drop official document here or click to browse',
     uploadAreaSubtitle: 'Supports administrative documents in PDF, PNG, JPG, JPEG',
     uploadFormats: 'Accepted formats: PDF, PNG, JPG, JPEG',
@@ -190,12 +248,13 @@ const translations: Record<Language, Translations> = {
     processingSub: 'System is deskewing, filtering, and recognizing Khmer & English text',
     uploading: 'Uploading document...',
     successUpload: 'OCR Processing Successful',
+
     extractedText: 'Extracted OCR Text',
     documentPreview: 'Original Document Preview',
     copyText: 'Copy Text',
     copied: 'Copied to Clipboard',
     downloadTxt: 'Download as TXT',
-    downloadDocx: 'Download as Word (DOCX)',
+    downloadDocx: 'Download as Word (DOC)',
     clearText: 'Clear / Reset',
     resetConfirmTitle: 'Confirm Reset',
     resetConfirmDesc: 'Are you sure you want to clear the OCR output and selected document?',
@@ -209,24 +268,28 @@ const translations: Record<Language, Translations> = {
     fileSizeLabel: 'File Size',
     hashLabel: 'Integrity Checksum (SHA-256)',
     uploadedAt: 'Upload Date & Time',
-    totalDocuments: 'Total Archived Documents',
+
+    totalDocuments: 'Total Documents',
     processedDocs: 'Successfully Processed',
     pendingDocs: 'Pending Verification',
-    failedDocs: 'Failed',
+    failedDocs: 'Unclassified / Uncertain',
     recentActivity: 'Recent OCR Activities',
     viewAll: 'View All',
     noDocumentsYet: 'No documents processed in the system yet.',
     noAuditLogsYet: 'No audit logs recorded yet.',
+
     actionView: 'View',
     actionDelete: 'Delete',
-    actionVerify: 'Human Verification',
+    actionVerify: 'Verify Fields',
     actionDownload: 'Download Original',
     deleteConfirm: 'Confirm Document Deletion',
     deleteWarning: 'Document file and records will be deleted with an immutable audit log entry.',
     overrideClassification: 'Override Classification',
     structuredDataTab: 'Structured Civil Data',
     rawTextTab: 'Full OCR Extracted Text',
+
     verificationWorkspace: 'Official Verification Workspace',
+    verificationQueue: 'Document Verification Queue',
     birthCertInfo: 'Civil Registration Record Details',
     fullNameKhmer: 'Full Name (Khmer)',
     fullNameEnglish: 'Full Name (Latin)',
@@ -240,6 +303,9 @@ const translations: Record<Language, Translations> = {
     reviewerName: 'Reviewing Officer Name',
     finalizeVerification: 'Confirm & Finalize Verification Record',
     saveCorrections: 'Submit Field Corrections',
+
+    ocrServiceStatus: 'Official OCR Service Status',
+    ocrEngineInfo: 'OCR Engine Specifications',
     auditTrailTitle: 'Administrative System Audit Trail',
     onlineStatus: 'System Online',
     offlineStatus: 'System Offline',
@@ -254,28 +320,79 @@ const translations: Record<Language, Translations> = {
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
+  localizeHref: (href: string) => string;
   t: Translations;
 }
 
 const LanguageContext = createContext<LanguageContextType>({
   language: 'km',
   setLanguage: () => {},
+  localizeHref: (href: string) => href,
   t: translations.km,
 });
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('km');
-
-  useEffect(() => {
-    const saved = localStorage.getItem('gov_ocr_lang') as Language;
-    if (saved === 'km' || saved === 'en') {
-      setLanguageState(saved);
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      const pathname = window.location.pathname;
+      if (pathname === '/en' || pathname.startsWith('/en/')) {
+        return 'en';
+      }
+      if (pathname === '/km' || pathname.startsWith('/km/')) {
+        return 'km';
+      }
+      const saved = localStorage.getItem('gov_ocr_lang') as Language;
+      if (saved === 'km' || saved === 'en') {
+        return saved;
+      }
     }
+    return 'km';
+  });
+
+  // Keep state in sync with browser back / forward navigation
+  React.useEffect(() => {
+    const handlePopState = () => {
+      const pathname = window.location.pathname;
+      if (pathname === '/en' || pathname.startsWith('/en/')) {
+        setLanguageState('en');
+      } else if (pathname === '/km' || pathname.startsWith('/km/')) {
+        setLanguageState('km');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('gov_ocr_lang', lang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('gov_ocr_lang', lang);
+
+      // Synchronize URL path to reflect /km or /en
+      const pathname = window.location.pathname;
+      let newPath = pathname;
+
+      if (pathname === '/' || pathname === '/km' || pathname === '/en') {
+        newPath = `/${lang}`;
+      } else if (pathname.startsWith('/km/')) {
+        newPath = `/${lang}${pathname.slice(3)}`;
+      } else if (pathname.startsWith('/en/')) {
+        newPath = `/${lang}${pathname.slice(3)}`;
+      } else {
+        newPath = `/${lang}${pathname}`;
+      }
+
+      const search = window.location.search;
+      const hash = window.location.hash;
+      window.history.pushState(null, '', `${newPath}${search}${hash}`);
+    }
+  };
+
+  const localizeHref = (href: string) => {
+    if (href === '/') {
+      return `/${language}`;
+    }
+    return `/${language}${href}`;
   };
 
   return (
@@ -283,6 +400,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       value={{
         language,
         setLanguage,
+        localizeHref,
         t: translations[language],
       }}
     >

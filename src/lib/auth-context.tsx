@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { OfficerProfile } from '../types/document';
 
 const defaultOfficer: OfficerProfile = {
@@ -25,28 +25,33 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [officer, setOfficerState] = useState<OfficerProfile>(defaultOfficer);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('gov_ocr_officer');
-    if (saved) {
-      try {
-        setOfficerState(JSON.parse(saved));
-      } catch {
-        // use default
+  const [officer, setOfficerState] = useState<OfficerProfile>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('gov_ocr_officer');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          // ignore error
+        }
       }
     }
-  }, []);
+    return defaultOfficer;
+  });
 
   const setOfficer = (newOfficer: OfficerProfile) => {
     setOfficerState(newOfficer);
-    localStorage.setItem('gov_ocr_officer', JSON.stringify(newOfficer));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('gov_ocr_officer', JSON.stringify(newOfficer));
+    }
   };
 
   const updateOfficerName = (name: string) => {
     const updated = { ...officer, name };
     setOfficerState(updated);
-    localStorage.setItem('gov_ocr_officer', JSON.stringify(updated));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('gov_ocr_officer', JSON.stringify(updated));
+    }
   };
 
   return (

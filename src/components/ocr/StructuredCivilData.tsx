@@ -3,14 +3,14 @@
 import React from 'react';
 import { BirthCertificateData } from '../../types/api';
 import { useLanguage } from '../../lib/i18n';
-import { FileBadge2, AlertTriangle, CheckCircle, ShieldCheck } from 'lucide-react';
+import { FileBadge2, AlertTriangle } from 'lucide-react';
 
 interface StructuredCivilDataProps {
   data: BirthCertificateData;
   documentId?: string;
 }
 
-export function StructuredCivilData({ data, documentId }: StructuredCivilDataProps) {
+export function StructuredCivilData({ data }: StructuredCivilDataProps) {
   const { t, language } = useLanguage();
 
   const fields = [
@@ -89,22 +89,22 @@ export function StructuredCivilData({ data, documentId }: StructuredCivilDataPro
   ];
 
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-xl shadow-xs overflow-hidden">
+    <div className="bg-white border border-[#E5EAF0] rounded-xl shadow-xs overflow-hidden">
       {/* Civil Card Header */}
-      <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#E2E8F0] bg-[#F8FAFC]">
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#E5EAF0] bg-[#F5F7FA]">
         <div className="flex items-center gap-2">
-          <FileBadge2 className="w-4 h-4 text-[#17365D]" strokeWidth={2} />
-          <h3 className="text-xs font-bold text-[#17365D] uppercase tracking-wider font-khmer">
+          <FileBadge2 className="w-4 h-4 text-[#2457A7]" strokeWidth={2} />
+          <h3 className="text-xs font-bold text-[#172B4D] uppercase tracking-wider font-khmer">
             {t.birthCertInfo}
           </h3>
         </div>
-        <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#17365D] border border-[#BFDBFE] font-khmer">
+        <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#EFF4FC] text-[#2457A7] border border-[#D0E0F7] font-khmer">
           ទិន្នន័យអត្រានុកូលដ្ឋាន
         </span>
       </div>
 
       {/* Grid of Extracted Fields */}
-      <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
         {fields.map((field) => {
           const hasValue = field.value !== null && field.value !== undefined && field.value !== '';
           const confidence = field.confidence;
@@ -112,14 +112,14 @@ export function StructuredCivilData({ data, documentId }: StructuredCivilDataPro
           return (
             <div
               key={field.key}
-              className={`p-3.5 rounded-lg border transition-all ${
+              className={`p-3 rounded-lg border transition-all ${
                 field.isUncertain
-                  ? 'bg-[#FFFBEB] border-[#FDE68A]'
-                  : 'bg-[#F8FAFC] border-[#E2E8F0]'
+                  ? 'bg-[#FFF0B3]/30 border-[#FFE58F]'
+                  : 'bg-[#F5F7FA] border-[#E5EAF0]'
               }`}
             >
-              <div className="flex items-center justify-between gap-2 mb-1.5">
-                <span className="text-xs font-semibold text-[#64748B] font-khmer truncate">
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <span className="text-xs font-semibold text-[#5E6C84] font-khmer truncate">
                   {language === 'km' ? field.labelKhmer : field.labelEnglish}
                 </span>
 
@@ -127,8 +127,8 @@ export function StructuredCivilData({ data, documentId }: StructuredCivilDataPro
                   <span
                     className={`text-[10px] font-mono px-1.5 py-0.2 rounded-sm border ${
                       confidence >= 0.8
-                        ? 'bg-[#F0FDF4] text-[#16A34A] border-[#BBF7D0]'
-                        : 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]'
+                        ? 'bg-[#E3FCEF] text-[#00875A] border-[#ABF5D1]'
+                        : 'bg-[#FFEBE6] text-[#DE350B] border-[#FFBDAD]'
                     }`}
                   >
                     {(confidence * 100).toFixed(0)}%
@@ -136,18 +136,18 @@ export function StructuredCivilData({ data, documentId }: StructuredCivilDataPro
                 )}
               </div>
 
-              <div className="text-sm font-semibold text-[#1E293B] font-khmer min-h-[22px]">
+              <div className="text-xs sm:text-sm font-semibold text-[#172B4D] font-khmer min-h-[22px]">
                 {hasValue ? (
                   <span>{field.value}</span>
                 ) : (
-                  <span className="text-[#94A3B8] italic font-normal text-xs">
+                  <span className="text-[#A5ADBA] italic font-normal text-xs">
                     មិនមានទិន្នន័យ (None)
                   </span>
                 )}
               </div>
 
               {field.isUncertain && (
-                <div className="flex items-center gap-1 mt-1 text-[10px] text-[#D97706] font-khmer">
+                <div className="flex items-center gap-1 mt-1 text-[10px] text-[#FF991F] font-khmer">
                   <AlertTriangle className="w-3 h-3" />
                   <span>កម្រិតទំនុកចិត្តទាប — ត្រូវការផ្ទៀងផ្ទាត់</span>
                 </div>
