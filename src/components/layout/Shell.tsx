@@ -59,16 +59,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
                       Kingdom of Cambodia • Document Intelligence System
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 text-[11px] sm:text-xs">
+                  <div className="flex items-center gap-2 text-[11px] sm:text-xs text-[#5E6C84]">
                     <span>Version 1.0.0</span>
-                    <a
-                      href="https://3-25-134-111.sslip.io/docs"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[#2457A7] hover:underline font-medium"
-                    >
-                      REST API Docs
-                    </a>
+                    <span>•</span>
+                    <span className="font-khmer">ច្រកទ្វារសុវត្ថិភាពឌីជីថលរដ្ឋបាល</span>
                   </div>
                 </div>
               </footer>

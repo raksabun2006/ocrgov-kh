@@ -1,6 +1,6 @@
 /**
  * Cambodian Government Document Intelligence System API Types
- * Mapped strictly to OpenAPI 3.1.0 specifications from https://3-25-134-111.sslip.io/openapi.json
+ * Mapped strictly to OpenAPI 3.1.0 specifications.
  */
 
 export type DocumentTypeEnum =

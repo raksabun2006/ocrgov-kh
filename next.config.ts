@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
+      // Hide backend URL by reverse proxying all API requests through Next.js
+      {
+        source: '/api/v1/:path*',
+        destination: 'https://3-25-134-111.sslip.io/api/v1/:path*',
+      },
       {
         source: '/km',
         destination: '/',

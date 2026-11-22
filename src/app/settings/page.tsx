@@ -110,8 +110,11 @@ export default function SettingsPage() {
 
           <div className="p-4 sm:p-6 space-y-3 text-xs">
             <div className="flex items-center justify-between py-2 border-b border-[#F5F7FA]">
-              <span className="text-[#5E6C84]">API Base URL:</span>
-              <span className="font-mono font-semibold text-[#2457A7]">{API_BASE_URL}</span>
+              <span className="text-[#5E6C84] font-khmer">ច្រកតភ្ជាប់ API:</span>
+              <span className="font-mono text-xs font-semibold text-[#00875A] inline-flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#00875A]" />
+                <span>Internal Protected Gateway (Encrypted)</span>
+              </span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-[#F5F7FA]">
               <span className="text-[#5E6C84]">System Name:</span>

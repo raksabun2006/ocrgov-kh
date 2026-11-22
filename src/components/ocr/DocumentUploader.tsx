@@ -289,7 +289,7 @@ export function DocumentUploader({
           {/* Step 3: Trigger Action */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-[#E5EAF0]">
             <div className="text-[11px] text-[#5E6C84] font-khmer">
-              ឯកសារនឹងត្រូវដំណើរការតាមរយៈ Backend API (POST /api/v1/documents/upload)
+              ប្រព័ន្ធនឹងដំណើរការសម្អាតរូបភាព និងសម្គាល់អត្ថបទដោយស្វ័យប្រវត្ត
             </div>
 
             <button
