@@ -22,7 +22,7 @@
   --status-error-bg: #FFEBE6;
   
   --font-inter: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-khmer: 'Noto Sans Khmer', 'Battambang', 'Khmer OS Battambang', 'Khmer OS', system-ui, sans-serif;
+  --font-khmer: 'Battambang', 'Noto Sans Khmer', 'Khmer OS Battambang', 'Khmer OS', system-ui, sans-serif;
 }
 
 * {
@@ -35,6 +35,18 @@ body {
   font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure Khmer typography has comfortable line height to prevent diacritic clipping */
+.font-khmer {
+  font-family: var(--font-khmer);
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+}
+
+/* Primary heading line height for mixed Khmer/English */
+h1.font-khmer, h2.font-khmer, h3.font-khmer, h4.font-khmer {
+  line-height: 1.45;
 }
 
 /* Prevent auto-zoom on input focus on iOS / mobile Safari, Chrome, and Android */

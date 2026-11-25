@@ -34,7 +34,7 @@ export function Header({ onMobileMenuClick }: HeaderProps) {
     <>
       <header className="sticky top-0 z-30 flex items-center justify-between h-16 sm:h-20 px-3 sm:px-6 lg:px-8 bg-white border-b border-[#E5EAF0] shadow-[0_1px_2px_rgba(9,30,66,0.03)]">
         {/* Left: Mobile hamburger & Clean Government Header */}
-        <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
+        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
           <button
             onClick={onMobileMenuClick}
             className="lg:hidden p-2 -ml-1 text-[#5E6C84] hover:bg-[#F5F7FA] rounded-lg transition-colors focus:outline-hidden touch-manipulation"
@@ -42,6 +42,14 @@ export function Header({ onMobileMenuClick }: HeaderProps) {
           >
             <Menu className="w-5 h-5" strokeWidth={2} />
           </button>
+
+          <Link href="/" className="hidden sm:block flex-shrink-0 hover:opacity-90 transition-opacity">
+            <img
+              src="/images/cambodia-emblem.png"
+              alt="Royal Emblem of Cambodia"
+              className="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-xs"
+            />
+          </Link>
 
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2">
@@ -53,7 +61,10 @@ export function Header({ onMobileMenuClick }: HeaderProps) {
                 Kingdom of Cambodia
               </span>
             </div>
-            <h1 className="text-xs sm:text-base lg:text-lg font-bold text-[#172B4D] tracking-tight font-khmer truncate max-w-[200px] xs:max-w-xs sm:max-w-md md:max-w-xl">
+            <h1
+              suppressHydrationWarning
+              className="text-xs sm:text-base lg:text-lg font-bold text-[#172B4D] tracking-tight font-khmer truncate max-w-[200px] xs:max-w-xs sm:max-w-md md:max-w-xl"
+            >
               {t.systemTitle}
             </h1>
           </div>

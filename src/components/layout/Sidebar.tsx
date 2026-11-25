@@ -229,24 +229,35 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           collapsed ? 'w-20' : 'w-72 max-w-[85vw] sm:w-68'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        {/* Clean Official Government Identity Header (NO decorative logo) */}
-        <div className="flex items-center justify-between h-16 sm:h-20 px-4 border-b border-[#E5EAF0] bg-white">
+        {/* Official Cambodian Government Identity Header with Royal Emblem */}
+        <div className="flex items-center justify-between h-16 sm:h-20 px-3.5 sm:px-4 border-b border-[#E5EAF0] bg-white">
           {!collapsed ? (
-            <div className="flex flex-col min-w-0 pr-2">
-              <span className="text-xs sm:text-[13px] font-bold tracking-tight text-[#172B4D] uppercase truncate font-khmer leading-snug">
-                ព្រះរាជាណាចក្រកម្ពុជា
-              </span>
-              <span className="text-[10px] text-[#5E6C84] truncate tracking-wider font-medium uppercase mt-0.5">
-                Kingdom of Cambodia
-              </span>
-              <span className="text-[9.5px] text-[#2457A7] font-semibold truncate font-khmer mt-0.5">
-                ប្រព័ន្ធឯកសាររដ្ឋបាល
-              </span>
-            </div>
+            <Link href="/" className="flex items-center gap-2.5 min-w-0 pr-1 hover:opacity-90 transition-opacity">
+              <img
+                src="/images/cambodia-emblem.png"
+                alt="Cambodia Emblem"
+                className="w-9 h-9 sm:w-10 sm:h-10 object-contain flex-shrink-0 drop-shadow-xs"
+              />
+              <div className="flex flex-col min-w-0">
+                <span className="text-[12px] sm:text-[13px] font-bold tracking-tight text-[#172B4D] uppercase truncate font-khmer leading-snug">
+                  ព្រះរាជាណាចក្រកម្ពុជា
+                </span>
+                <span className="text-[9.5px] text-[#5E6C84] truncate tracking-wider font-semibold uppercase mt-0.5">
+                  Kingdom of Cambodia
+                </span>
+                <span className="text-[9px] text-[#2457A7] font-semibold truncate font-khmer mt-0.5">
+                  ប្រព័ន្ធឯកសាររដ្ឋបាល
+                </span>
+              </div>
+            </Link>
           ) : (
-            <div className="mx-auto text-xs font-bold text-[#2457A7] tracking-widest font-khmer">
-              កម្ពុជា
-            </div>
+            <Link href="/" className="mx-auto hover:opacity-90 transition-opacity" title="Kingdom of Cambodia">
+              <img
+                src="/images/cambodia-emblem.png"
+                alt="Cambodia Emblem"
+                className="w-8 h-8 object-contain drop-shadow-xs"
+              />
+            </Link>
           )}
 
           {/* Desktop collapse toggle */}

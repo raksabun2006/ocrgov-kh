@@ -31,7 +31,7 @@ export async function uploadDocument(
   return apiClient<DocumentUploadResponse>('/api/v1/documents/upload', {
     method: 'POST',
     body: formData,
-    timeoutMs: 120000, // OCR processing may take time
+    timeoutMs: 300000, // OCR processing may take time (up to 5 min)
   });
 }
 
@@ -181,7 +181,7 @@ export async function scanReceipt(file: File): Promise<ScanReceiptResponse> {
   return apiClient<ScanReceiptResponse>('/api/v1/receipts/scan', {
     method: 'POST',
     body: formData,
-    timeoutMs: 60000,
+    timeoutMs: 300000,
   });
 }
 

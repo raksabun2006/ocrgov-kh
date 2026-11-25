@@ -348,48 +348,31 @@ const LanguageContext = createContext<LanguageContextType>({
 });
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname() || '';
+  const [language, setLanguageState] = useState<Language>('km');
 
-  // Synchronously compute language from pathname on BOTH Server and Client during SSR
-  const isEn = pathname === '/en' || pathname.startsWith('/en/');
-  const [language, setLanguageState] = useState<Language>(isEn ? 'en' : 'km');
-
-  // Keep state in sync with pathname changes and browser back / forward navigation
+  // Load saved preference after mount without causing SSR mismatch
   useEffect(() => {
-    const isEnglish = pathname === '/en' || pathname.startsWith('/en/');
-    setLanguageState(isEnglish ? 'en' : 'km');
-  }, [pathname]);
+    try {
+      const saved = localStorage.getItem('gov_ocr_lang') as Language | null;
+      if (saved === 'km' || saved === 'en') {
+        setLanguageState(saved);
+      }
+    } catch {
+      // Fallback safely if localStorage is restricted
+    }
+  }, []);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    if (typeof window !== 'undefined') {
+    try {
       localStorage.setItem('gov_ocr_lang', lang);
-
-      // Synchronize URL path to reflect /km or /en
-      const currentPath = window.location.pathname;
-      let newPath = currentPath;
-
-      if (currentPath === '/' || currentPath === '/km' || currentPath === '/en') {
-        newPath = `/${lang}`;
-      } else if (currentPath.startsWith('/km/')) {
-        newPath = `/${lang}${currentPath.slice(3)}`;
-      } else if (currentPath.startsWith('/en/')) {
-        newPath = `/${lang}${currentPath.slice(3)}`;
-      } else {
-        newPath = `/${lang}${currentPath}`;
-      }
-
-      const search = window.location.search;
-      const hash = window.location.hash;
-      window.history.pushState(null, '', `${newPath}${search}${hash}`);
+    } catch {
+      // ignore
     }
   };
 
   const localizeHref = (href: string) => {
-    if (href === '/') {
-      return `/${language}`;
-    }
-    return `/${language}${href}`;
+    return href;
   };
 
   return (
